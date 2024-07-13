@@ -7,12 +7,15 @@ from datetime import datetime
 conn = sqlite3.connect('university.db')
 cursor = conn.cursor()
 
-# Создание таблиц
+# Создание таблиц с внешними ключами
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS students (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
-        group_id INTEGER
+        group_id INTEGER,
+        FOREIGN KEY (group_id) REFERENCES groups(id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
     )
 ''')
 
@@ -34,7 +37,10 @@ cursor.execute('''
     CREATE TABLE IF NOT EXISTS subjects (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
-        teacher_id INTEGER
+        teacher_id INTEGER,
+        FOREIGN KEY (teacher_id) REFERENCES teachers(id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
     )
 ''')
 
@@ -44,7 +50,13 @@ cursor.execute('''
         student_id INTEGER,
         subject_id INTEGER,
         grade INTEGER,
-        date TEXT
+        date TEXT,
+        FOREIGN KEY (student_id) REFERENCES students(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        FOREIGN KEY (subject_id) REFERENCES subjects(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
     )
 ''')
 
